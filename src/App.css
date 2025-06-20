@@ -1244,3 +1244,165 @@ body {
   }
 }
 
+/* Additional CSS for particles and enhanced effects */
+@keyframes float-particles {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px) rotate(90deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(10px) translateX(-15px) rotate(180deg);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translateY(-10px) translateX(5px) rotate(270deg);
+    opacity: 0.9;
+  }
+}
+
+/* Enhanced hover effects for portfolio items */
+.portfolio-item::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 107, 138, 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 25px;
+}
+
+.portfolio-item:hover::after {
+  opacity: 1;
+}
+
+/* Enhanced service item animations */
+.service-item {
+  animation: service-float 6s ease-in-out infinite;
+}
+
+.service-item:nth-child(1) {
+  animation-delay: 0s;
+}
+.service-item:nth-child(2) {
+  animation-delay: 1s;
+}
+.service-item:nth-child(3) {
+  animation-delay: 2s;
+}
+.service-item:nth-child(4) {
+  animation-delay: 3s;
+}
+
+@keyframes service-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Enhanced button ripple effect */
+.cta-button,
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button::after,
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.cta-button:active::after,
+.btn-primary:active::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* Enhanced text shadow effects */
+.hero-text h1 {
+  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Glowing borders for form inputs */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  box-shadow: 0 0 0 4px rgba(255, 107, 138, 0.2),
+    0 0 10px rgba(255, 107, 138, 0.3), 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced loading animation with multiple dots */
+.loading-container::before {
+  content: "🌟 ✨ 💫";
+  font-size: 24px;
+  animation: sparkle-loading 2s ease-in-out infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes sparkle-loading {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Colorful scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-sunset);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gradient-ocean);
+}
+
+/* Additional colorful accents */
+.section-title::before {
+  display: none;
+}
+
+.about-text h2::before {
+  display: none;
+}
+
+.contact-info h3::before {
+  display: none;
+}

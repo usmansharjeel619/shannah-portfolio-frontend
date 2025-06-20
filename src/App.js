@@ -70,36 +70,6 @@ function MainWebsite() {
     }
   };
 
-  const handlePortfolioSubmit = async (formData) => {
-    try {
-      const response = await fetch(`${API_URL}/portfolio`, {
-        method: "POST",
-        body: formData,
-      });
-      if (response.ok) {
-        fetchPortfolio();
-        alert("Portfolio item added successfully!");
-      }
-    } catch (error) {
-      console.error("Error adding portfolio:", error);
-    }
-  };
-
-  const handleBlogSubmit = async (formData) => {
-    try {
-      const response = await fetch(`${API_URL}/blog`, {
-        method: "POST",
-        body: formData,
-      });
-      if (response.ok) {
-        fetchBlog();
-        alert("Blog post added successfully!");
-      }
-    } catch (error) {
-      console.error("Error adding blog:", error);
-    }
-  };
-
   const handleContactSubmit = async (formData) => {
     try {
       const response = await fetch(`${API_URL}/contact`, {
@@ -123,15 +93,68 @@ function MainWebsite() {
     setPortfolioFilter(type);
     fetchPortfolio(type);
   };
+  // Enhanced Hero text with animated spans:
+  const EnhancedHeroText = () => (
+    <div className="hero-text">
+      <h1>
+        <span>Schrijver</span> & <span>Fotografe</span>
+      </h1>
+      <p>
+        Hi, ik ben Shannah. Schrijver én fotografe. Wil jij, of jouw
+        organisatie, van de wereld een betere plaats maken? En heb je daarvoor
+        tekst en/of foto's nodig? <strong>Say no more. I'm your woman.</strong>
+      </p>
+      <p>
+        Met een hart voor mensen en de wereld, communicatie-ervaring in de ngo-
+        en sociale sector en een passie voor gelijkheid en mensenrechten creëer
+        ik graag, samen met jou, een positieve en blijvende impact.
+      </p>
+      <button className="cta-button" onClick={() => setCurrentPage("contact")}>
+        Contacteer me
+      </button>
+    </div>
+  );
 
-  // Components
+  // Add enhanced scroll effects:
+  useEffect(() => {
+    const handleScroll = () => {
+      const header = document.querySelector(".header");
+      const scrolled = window.scrollY > 50;
+
+      if (scrolled) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Add mobile menu toggle:
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  // Enhanced Header with mobile support:
   const Header = () => (
     <header className="header">
       <nav className="nav">
         <div className="logo" onClick={() => setCurrentPage("home")}>
-          Shannah Jongstra
+          <img
+            src="/logo.png"
+            alt="Shannah Jongstra Logo"
+            className="logo-image"
+            onError={(e) => {
+              e.target.style.display = "none";
+              e.target.parentNode.innerHTML = "Shannah Jongstra";
+            }}
+          />
         </div>
-        <ul className="nav-menu">
+        <ul className={`nav-menu ${mobileMenuOpen ? "active" : ""}`}>
           {[
             "home",
             "tekst",
@@ -142,42 +165,44 @@ function MainWebsite() {
             "contact",
           ].map((page) => (
             <li key={page}>
-              <a href="#" onClick={() => setCurrentPage(page)}>
+              <a
+                href="#"
+                onClick={() => {
+                  setCurrentPage(page);
+                  setMobileMenuOpen(false);
+                }}
+              >
                 {page === "about" ? "Over Mij" : page.toUpperCase()}
               </a>
             </li>
           ))}
         </ul>
+        <div
+          className={`hamburger ${mobileMenuOpen ? "active" : ""}`}
+          onClick={toggleMobileMenu}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </nav>
     </header>
   );
-
   const HomePage = () => (
     <div className="page">
       <section className="hero">
         <div className="hero-content">
-          <div className="hero-text">
-            <h1>Schrijver & Fotografe</h1>
-            <p>
-              Hi, ik ben Shannah. Schrijver én fotografe. Wil jij, of jouw
-              organisatie, van de wereld een betere plaats maken? En heb je
-              daarvoor tekst en/of foto's nodig? Say no more. I'm your woman.
-            </p>
-            <p>
-              Met een hart voor mensen en de wereld, communicatie-ervaring in de
-              ngo- en sociale sector en een passie voor gelijkheid en
-              mensenrechten creëer ik graag, samen met jou, een positieve en
-              blijvende impact.
-            </p>
-            <button
-              className="cta-button"
-              onClick={() => setCurrentPage("contact")}
-            >
-              Contacteer me
-            </button>
-          </div>
+          <EnhancedHeroText />
           <div className="hero-image">
-            <div className="hero-placeholder">Jouw foto hier</div>
+            <div className="image-container">
+              <img
+                src="/shannah-hero.jpg"
+                alt="Professional placeholder"
+                className="hero-photo loaded"
+                onError={() => console.log("image loading failed!")}
+              />
+              <div className="image-frame"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -190,11 +215,16 @@ function MainWebsite() {
       </section>
     </div>
   );
-
+  const serviceIcons = {
+    storytelling: "📝",
+    copywriting: "✍️",
+    translations: "🌍",
+    proofreading: "🔍",
+  };
   const TekstPage = () => (
     <div className="page">
       <section className="services">
-        <h2 className="section-title">Tekstdiensten</h2>
+        <h2 className="section-title">✨ Tekstdiensten</h2>
         <div className="services-grid">
           <div className="service-item">
             <div className="service-icon">📝</div>
@@ -236,7 +266,7 @@ function MainWebsite() {
             className="cta-button"
             onClick={() => setCurrentPage("portfolio")}
           >
-            Bekijk Portfolio
+            🎯 Bekijk Portfolio
           </button>
         </div>
       </section>
@@ -331,8 +361,16 @@ function MainWebsite() {
     <div className="page">
       <section className="about">
         <div className="about-content">
-          <div className="about-image">
-            <div className="about-placeholder">Jouw foto hier</div>
+          <div className="hero-image">
+            <div className="image-container">
+              <img
+                src="/shannah-hero.jpg"
+                alt="Professional placeholder"
+                className="hero-photo loaded"
+                onError={() => console.log("image loading failed!")}
+              />
+              <div className="image-frame"></div>
+            </div>
           </div>
           <div className="about-text">
             <h2>Over Mij</h2>
@@ -458,6 +496,37 @@ function MainWebsite() {
     );
   };
 
+  // Add intersection observer for animations:
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll(
+      ".portfolio-item, .service-item, .blog-item, .stat-card"
+    );
+    animateElements.forEach((el) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(30px)";
+      el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [portfolioData, blogData]);
+
+  // Enhanced PortfolioItem with better hover effects:
   const PortfolioItem = ({ item }) => (
     <div
       className="portfolio-item"
@@ -475,10 +544,26 @@ function MainWebsite() {
       <div className="portfolio-content">
         <h3>{item.title}</h3>
         <p>{item.description}</p>
+        {item.link && (
+          <div style={{ marginTop: "15px" }}>
+            <span
+              style={{
+                color: "var(--primary-pink)",
+                fontSize: "14px",
+                fontWeight: "600",
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+              }}
+            >
+              🔗 Bekijk project
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
 
+  // Enhanced BlogItem:
   const BlogItem = ({ item }) => (
     <div
       className="blog-item"
@@ -493,13 +578,27 @@ function MainWebsite() {
       </div>
       <div className="blog-content">
         <div className="blog-date">
-          {new Date(item.createdAt).toLocaleDateString("nl-NL")}
+          📅 {new Date(item.createdAt).toLocaleDateString("nl-NL")}
         </div>
         <h3>{item.title}</h3>
         <p>{item.excerpt}</p>
+        <div style={{ marginTop: "15px" }}>
+          <span
+            style={{
+              color: "var(--primary-pink)",
+              fontSize: "14px",
+              fontWeight: "600",
+              textTransform: "uppercase",
+              letterSpacing: "0.5px",
+            }}
+          >
+            📖 Lees meer
+          </span>
+        </div>
       </div>
     </div>
   );
+
   const renderPage = () => {
     switch (currentPage) {
       case "home":
@@ -523,11 +622,8 @@ function MainWebsite() {
 
   return (
     <div className="App">
-
       <Header />
-
       <main className="main-content">{renderPage()}</main>
-
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-section">
@@ -536,21 +632,21 @@ function MainWebsite() {
             <p>Gespecialiseerd in sociale rechtvaardigheid</p>
           </div>
           <div className="footer-section">
-            <h4>Services</h4>
-            <p>Storytelling & Artikelen</p>
-            <p>Copywriting</p>
-            <p>Fotografie</p>
-            <p>Vertalingen</p>
+            <h4>🎯 Services</h4>
+            <p>📝 Storytelling & Artikelen</p>
+            <p>✍️ Copywriting</p>
+            <p>📷 Fotografie</p>
+            <p>🌍 Vertalingen</p>
           </div>
           <div className="footer-section">
-            <h4>Contact</h4>
-            <p>shannah@example.com</p>
-            <p>+31 6 12345678</p>
-            <p>Nederland</p>
+            <h4>📞 Contact</h4>
+            <p>📧 shannah@example.com</p>
+            <p>📱 +31 6 12345678</p>
+            <p>🇳🇱 Nederland</p>
           </div>
         </div>
         <p className="footer-bottom">
-          © 2024 Shannah Jongstra. Alle rechten voorbehouden.
+          © 2025 Shannah Jongstra. Alle rechten voorbehouden. ✨
         </p>
       </footer>
     </div>
