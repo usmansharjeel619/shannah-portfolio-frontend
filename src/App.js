@@ -15,8 +15,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<MainWebsite />} />
-        <Route path="/admin" element={<AdminPanel />} />
-        <Route path="/admin/*" element={<AdminPanel />} />
+        <Route path="/cms-8xR2mP9kQ5nL7tW3vB6" element={<AdminPanel />} />
+        <Route path="/cms-8xR2mP9kQ5nL7tW3vB6/*" element={<AdminPanel />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
@@ -31,6 +31,8 @@ function MainWebsite() {
   const [loading, setLoading] = useState(false);
   const [portfolioFilter, setPortfolioFilter] = useState("all");
   const [settings, setSettings] = useState({});
+  const [selectedBlog, setSelectedBlog] = useState(null);
+  const [showBlogPost, setShowBlogPost] = useState(false);
 
   useEffect(() => {
     fetchPortfolio();
@@ -38,6 +40,21 @@ function MainWebsite() {
     fetchSettings();
   }, []);
 
+  const fetchSingleBlog = async (blogId) => {
+    try {
+      const response = await fetch(`${API_URL}/blog/${blogId}`);
+      const data = await response.json();
+      setSelectedBlog(data);
+      setShowBlogPost(true);
+    } catch (error) {
+      console.error("Error fetching blog post:", error);
+    }
+  };
+
+  const closeBlogPost = () => {
+    setShowBlogPost(false);
+    setSelectedBlog(null);
+  };
   const fetchPortfolio = async (type = "all") => {
     setLoading(true);
     try {
@@ -567,7 +584,7 @@ function MainWebsite() {
   const BlogItem = ({ item }) => (
     <div
       className="blog-item"
-      onClick={() => window.open(`/blog/${item._id}`, "_blank")}
+      onClick={() => fetchSingleBlog(item._id)} // FIXED: Proper click handler
     >
       <div className="blog-image">
         {item.image ? (
@@ -581,7 +598,13 @@ function MainWebsite() {
           📅 {new Date(item.createdAt).toLocaleDateString("nl-NL")}
         </div>
         <h3>{item.title}</h3>
-        <p>{item.excerpt}</p>
+        {/* FIXED: Render HTML content properly for excerpt */}
+        <div
+          className="blog-excerpt"
+          dangerouslySetInnerHTML={{
+            __html: item.excerpt || item.content?.substring(0, 150) + "...",
+          }}
+        />
         <div style={{ marginTop: "15px" }}>
           <span
             style={{
@@ -598,8 +621,75 @@ function MainWebsite() {
       </div>
     </div>
   );
+  const BlogPostView = () => {
+    if (!selectedBlog) return null;
+
+    return (
+      <div className="blog-post-overlay">
+        <div className="blog-post-container">
+          <div className="blog-post-header">
+            <button className="close-blog-btn" onClick={closeBlogPost}>
+              ✕ Sluiten
+            </button>
+          </div>
+
+          <article className="blog-post-content">
+            {/* Blog Header */}
+            <header className="blog-post-header-content">
+              {selectedBlog.image && (
+                <div className="blog-post-image">
+                  <img
+                    src={`http://localhost:5000${selectedBlog.image}`}
+                    alt={selectedBlog.title}
+                  />
+                </div>
+              )}
+
+              <div className="blog-post-meta">
+                <div className="blog-date">
+                  📅{" "}
+                  {new Date(selectedBlog.createdAt).toLocaleDateString(
+                    "nl-NL",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }
+                  )}
+                </div>
+                <h1>{selectedBlog.title}</h1>
+              </div>
+            </header>
+
+            {/* Blog Content - FIXED: Render HTML properly */}
+            <div
+              className="blog-post-body"
+              dangerouslySetInnerHTML={{ __html: selectedBlog.content }}
+            />
+
+            {/* Blog Footer */}
+            <footer className="blog-post-footer">
+              <div className="blog-tags">
+                <span className="tag">Sociale Rechtvaardigheid</span>
+                <span className="tag">Verhalen</span>
+              </div>
+
+              <div className="blog-share">
+                <button className="share-btn">Delen</button>
+              </div>
+            </footer>
+          </article>
+        </div>
+      </div>
+    );
+  };
 
   const renderPage = () => {
+    // Show blog post if one is selected
+    if (showBlogPost) {
+      return <BlogPostView />;
+    }
+
     switch (currentPage) {
       case "home":
         return <HomePage />;
@@ -659,6 +749,8 @@ function AdminPanel() {
   const [blogData, setBlogData] = useState([]);
   const [contactData, setContactData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
@@ -684,6 +776,40 @@ function AdminPanel() {
     setLoading(false);
   };
 
+  const handleLogin = () => {
+    if (password === "shannah2024!") {
+      setIsAuthenticated(true);
+      localStorage.setItem("admin_auth", "true");
+    } else {
+      alert("Incorrect password");
+    }
+  };
+
+  useEffect(() => {
+    // Check if already authenticated
+    const isAuth = localStorage.getItem("admin_auth");
+    if (isAuth === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="admin-login">
+        <div className="login-form">
+          <h2>Admin Access</h2>
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+          />
+          <button onClick={handleLogin}>Login</button>
+        </div>
+      </div>
+    );
+  }
   const AdminHeader = () => (
     <header className="admin-header">
       <div className="admin-nav">
@@ -715,6 +841,7 @@ function AdminPanel() {
           >
             Messages
           </button>
+          {/* UPDATED: Link back to main site */}
           <a href="/" className="back-to-site">
             ← Back to Site
           </a>
@@ -1016,6 +1143,15 @@ function AdminPanel() {
       const data = new FormData();
       data.append("title", formData.title);
       data.append("content", formData.content);
+
+      // FIXED: Create proper excerpt from HTML content
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = formData.content;
+      const textContent = tempDiv.textContent || tempDiv.innerText || "";
+      const excerpt =
+        textContent.substring(0, 150) + (textContent.length > 150 ? "..." : "");
+      data.append("excerpt", excerpt);
+
       if (formData.image) data.append("image", formData.image);
 
       try {
