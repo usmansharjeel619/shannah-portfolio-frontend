@@ -23,10 +23,7 @@ function App() {
   );
 }
 function MainWebsite() {
-  const API_URL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:5000/api"
-      : "https://shannahjongstra.be/api";
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
   const [currentPage, setCurrentPage] = useState("home");
   const [portfolioData, setPortfolioData] = useState([]);
