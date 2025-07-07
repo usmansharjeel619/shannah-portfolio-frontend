@@ -23,7 +23,8 @@ function App() {
   );
 }
 function MainWebsite() {
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  const API_URL =
+    process.env.REACT_APP_API_URL || "http://shannahjongstra.be/api";
 
   const [currentPage, setCurrentPage] = useState("home");
   const [portfolioData, setPortfolioData] = useState([]);
@@ -551,7 +552,10 @@ function MainWebsite() {
     >
       <div className="portfolio-image">
         {item.image ? (
-          <img src={`http://localhost:5000${item.image}`} alt={item.title} />
+          <img
+            src={`http://shannahjongstra.be${item.image}`}
+            alt={item.title}
+          />
         ) : (
           <div className="placeholder">
             {item.type === "text" ? "📝 TEKST" : "📷 FOTO"}
@@ -588,7 +592,10 @@ function MainWebsite() {
     >
       <div className="blog-image">
         {item.image ? (
-          <img src={`http://localhost:5000${item.image}`} alt={item.title} />
+          <img
+            src={`http://shannahjongstra.be${item.image}`}
+            alt={item.title}
+          />
         ) : (
           <div className="placeholder">📰 BLOG</div>
         )}
@@ -639,7 +646,7 @@ function MainWebsite() {
               {selectedBlog.image && (
                 <div className="blog-post-image">
                   <img
-                    src={`http://localhost:5000${selectedBlog.image}`}
+                    src={`http://shannahjongstra.be${selectedBlog.image}`}
                     alt={selectedBlog.title}
                   />
                 </div>
@@ -752,7 +759,8 @@ function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
 
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  const API_URL =
+    process.env.REACT_APP_API_URL || "http://shannahjongstra.be/api";
 
   useEffect(() => {
     fetchAllData();
@@ -1061,7 +1069,7 @@ function AdminPanel() {
                 <div className="item-image">
                   {item.image ? (
                     <img
-                      src={`http://localhost:5000${item.image}`}
+                      src={`http://shannahjongstra.be${item.image}`}
                       alt={item.title}
                     />
                   ) : (
