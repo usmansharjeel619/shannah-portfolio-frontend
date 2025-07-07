@@ -24,7 +24,7 @@ function App() {
 }
 function MainWebsite() {
   const API_URL =
-    process.env.REACT_APP_API_URL || "http://shannahjongstra.be/api";
+    process.env.REACT_APP_API_URL || "https://shannahjongstra.be/api";
 
   const [currentPage, setCurrentPage] = useState("home");
   const [portfolioData, setPortfolioData] = useState([]);
@@ -553,7 +553,7 @@ function MainWebsite() {
       <div className="portfolio-image">
         {item.image ? (
           <img
-            src={`http://shannahjongstra.be${item.image}`}
+            src={`https://shannahjongstra.be${item.image}`}
             alt={item.title}
           />
         ) : (
@@ -593,7 +593,7 @@ function MainWebsite() {
       <div className="blog-image">
         {item.image ? (
           <img
-            src={`http://shannahjongstra.be${item.image}`}
+            src={`https://shannahjongstra.be${item.image}`}
             alt={item.title}
           />
         ) : (
@@ -646,7 +646,7 @@ function MainWebsite() {
               {selectedBlog.image && (
                 <div className="blog-post-image">
                   <img
-                    src={`http://shannahjongstra.be${selectedBlog.image}`}
+                    src={`https://shannahjongstra.be${selectedBlog.image}`}
                     alt={selectedBlog.title}
                   />
                 </div>
@@ -760,7 +760,7 @@ function AdminPanel() {
   const [password, setPassword] = useState("");
 
   const API_URL =
-    process.env.REACT_APP_API_URL || "http://shannahjongstra.be/api";
+    process.env.REACT_APP_API_URL || "https://shannahjongstra.be/api";
 
   useEffect(() => {
     fetchAllData();
@@ -1069,7 +1069,7 @@ function AdminPanel() {
                 <div className="item-image">
                   {item.image ? (
                     <img
-                      src={`http://shannahjongstra.be${item.image}`}
+                      src={`httpss://shannahjongstra.be${item.image}`}
                       alt={item.title}
                     />
                   ) : (
